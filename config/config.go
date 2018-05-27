@@ -1,15 +1,110 @@
 package config
 
 import (
-	"io/ioutil"
-	"fmt"
+	"strings"
+	"os"
+	"bufio"
+	"io"
+	"log"
 )
 
-func ReadConfig() (string, error) {
-	if configText, err := ioutil.ReadFile("./confi/default.conf"); err != nil {
-		fmt.Printf("文件不存在: %s\n", err)
-		return "", fmt.Errorf("error %q",err)
-	}else{
-		return string(configText), nil
+// 读取所有config文件，default.conf > app.conf > other.conf 并合并字符串
+type Config struct {
+	Map map[string]string
+}
+
+func ReadAllConfigFile() Config {
+	// 先读取默认配置
+	config := ReadConfigFile("./config/default.conf")
+
+	// 循环读取app,dev,prod等conf文件,并覆盖默认配置
+	for {
+		activeConfig := ReadConfigFile("./config/" + config.Map["active"] + ".conf")
+		for key, value := range activeConfig.Map {
+			config.Map[key] = value
+		}
+		if len(activeConfig.Map["active"]) == 0 {
+			break
+		}
 	}
+
+	return config
+}
+
+func ReadConfigFile(path string) Config {
+	var config Config
+
+	config.Map = make(map[string]string)
+
+	file, err := os.Open(path)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	reader := bufio.NewReader(file)
+	// 无限循环，直到break
+	for {
+		line, _, err := reader.ReadLine()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			panic(err)
+		}
+
+		s := strings.TrimSpace(string(line))
+
+		// 跳过开头是#的注释
+		if strings.Index(s, "#") == 0 {
+			continue
+		}
+
+		index := strings.Index(s, "=")
+		if index < 0 {
+			continue
+		}
+
+		first := strings.TrimSpace(s[:index])
+		if len(first) == 0 {
+			continue
+		}
+		second := strings.TrimSpace(s[index+1:])
+
+		// 处理各种注释
+		pos := strings.Index(second, "\t#")
+		if pos > -1 {
+			second = second[0:pos]
+		}
+
+		pos = strings.Index(second, " #")
+		if pos > -1 {
+			second = second[0:pos]
+		}
+
+		pos = strings.Index(second, "\t//")
+		if pos > -1 {
+			second = second[0:pos]
+		}
+
+		pos = strings.Index(second, " //")
+		if pos > -1 {
+			second = second[0:pos]
+		}
+
+		if len(second) == 0 {
+			continue
+		}
+
+		config.Map[first] = strings.TrimSpace(second)
+	}
+
+	return config
+}
+
+func Get(key string) string {
+	config := ReadAllConfigFile()
+
+	log.Println(config)
+	return config.Map[key]
 }
