@@ -6,11 +6,13 @@ import (
 	"net/http"
 	"strings"
 	r "yugo/router"
+	"github.com/gorilla/csrf"
+	"strconv"
 )
 
 func staticServer(router *mux.Router) {
 	staticConfig := config.Get("static")
-	staticArray := strings.Split(staticConfig,",")
+	staticArray := strings.Split(staticConfig, ",")
 	// 生成一个或多个静态目录，默认static,可自行修改，或添加，以英文逗号分隔
 	for index := range staticArray {
 		static := staticArray[index]
@@ -18,9 +20,7 @@ func staticServer(router *mux.Router) {
 	}
 }
 
-func Run()  {
-
-
+func Run() {
 
 	router := mux.NewRouter()
 
@@ -28,9 +28,16 @@ func Run()  {
 
 	staticServer(router)
 
+	configMap := config.GetConfigMap()
 
-	port := config.Get("port")
+	maxAge, _ := strconv.Atoi(configMap["csrf.max.age"])
 
-	//log.Printf("服务器正在运行，端口：%s",port)
-	http.ListenAndServe(":"+port, router)
+	CSRF := csrf.Protect(
+		[]byte(configMap["csrf.key"]),
+		csrf.RequestHeader(configMap["csrf.request.header"]),
+		csrf.FieldName(configMap["csrf.field.name"]),
+		csrf.MaxAge(maxAge),
+	)
+
+	http.ListenAndServe(":"+configMap["port"], CSRF(router))
 }

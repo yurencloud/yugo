@@ -4,12 +4,13 @@ import (
 	"github.com/CloudyKit/jet"
 	"bytes"
 	"net/http"
+	"yugo/config"
 )
-
 
 func Render(writer http.ResponseWriter, templateName string, varMap jet.VarMap) {
 	var View = jet.NewHTMLSet("./views")
-	template, err := View.GetTemplate(templateName)
+
+	template, err := View.GetTemplate(templateName + config.Get("template.suffix"))
 	if err != nil {
 		// template could not be loaded
 	}

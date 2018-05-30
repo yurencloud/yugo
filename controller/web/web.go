@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"yugo/view"
 	"github.com/CloudyKit/jet"
+	"yugo/session"
 )
 
 func Get(writer http.ResponseWriter, request *http.Request) {
@@ -16,8 +17,14 @@ func Get(writer http.ResponseWriter, request *http.Request) {
 	//age := vars["age"]
 	//log.Println(age)
 
-	varMap := make(jet.VarMap)
-	varMap.Set("name", "tom")
+	s := session.GetInstance(writer, request)
 
-	view.Render(writer, "index.html", varMap)
+	//s.Values["name"] = "tom1"
+	//s.Save(request, writer)
+
+	varMap := make(jet.VarMap)
+	varMap.Set("name", s.Values["name"])
+
+
+	view.Render(writer, "index", varMap)
 }

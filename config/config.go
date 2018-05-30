@@ -108,3 +108,8 @@ func Get(key string) string {
 	log.Println(config)
 	return config.Map[key]
 }
+
+func GetConfigMap() map[string]string {
+	config := ReadAllConfigFile()
+	return config.Map
+}
