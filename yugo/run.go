@@ -5,7 +5,6 @@ import (
 	"yugo/config"
 	"net/http"
 	"strings"
-	r "yugo/router"
 	"github.com/gorilla/csrf"
 	"strconv"
 )
@@ -24,7 +23,7 @@ func Run() {
 
 	router := mux.NewRouter()
 
-	r.InitRouter(router)
+	InitRouter(router)
 
 	staticServer(router)
 

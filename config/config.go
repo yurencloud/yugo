@@ -5,7 +5,6 @@ import (
 	"os"
 	"bufio"
 	"io"
-	"log"
 )
 
 // 读取所有config文件，default.conf > app.conf > other.conf 并合并字符串
@@ -13,9 +12,25 @@ type Config struct {
 	Map map[string]string
 }
 
+var DefaultConfig  = map[string]string {
+	"port" : "3000",
+	"static" : "static",
+	"active" : "app",
+	"template.path" : "./views",
+	"template.suffix" : ".html",
+	"csrf.key" : "5ebe2294ecd0e0f08eab7690d2a6ee69",
+	"csrf.request.header" : "csrf",
+	"csrf.field.name" : "csrf",
+	"csrf.max.age" : "43200",
+	"session.key" : "5ebe2294ecd0e0f08eab7690d2a6ee69",
+	"app.name" : "yugo",
+	"log.max.size" : "10485760",
+	"log.level" : "debug",
+}
+
 func ReadAllConfigFile() Config {
 	// 先读取默认配置
-	config := ReadConfigFile("./config/default.conf")
+	config := Config{DefaultConfig }
 
 	// 循环读取app,dev,prod等conf文件,并覆盖默认配置
 	for {
@@ -104,8 +119,6 @@ func ReadConfigFile(path string) Config {
 
 func Get(key string) string {
 	config := ReadAllConfigFile()
-
-	log.Println(config)
 	return config.Map[key]
 }
 
