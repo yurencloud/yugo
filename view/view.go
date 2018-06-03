@@ -8,7 +8,7 @@ import (
 )
 
 func Render(writer http.ResponseWriter, templateName string, varMap jet.VarMap) {
-	var View = jet.NewHTMLSet("./views")
+	var View = jet.NewHTMLSet(config.Get("template.path"))
 
 	template, err := View.GetTemplate(templateName + config.Get("template.suffix"))
 	if err != nil {
