@@ -16,7 +16,7 @@ var DefaultConfig  = map[string]string {
 	"port" : "3000",
 	"static" : "static",
 	"active" : "app",
-	"template.path" : "./views",
+	"template.path" : "./static/views",
 	"template.suffix" : ".html",
 	"csrf.key" : "5ebe2294ecd0e0f08eab7690d2a6ee69",
 	"csrf.request.header" : "csrf",
