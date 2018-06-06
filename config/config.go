@@ -17,7 +17,7 @@ var DefaultConfig  = map[string]string {
 	"static" : "static",
 	"active" : "app",
 	"template.path" : "./static/views",
-	"template.suffix" : ".html",
+	"template.suffix" : ".jet",
 	"csrf.key" : "5ebe2294ecd0e0f08eab7690d2a6ee69",
 	"csrf.request.header" : "csrf",
 	"csrf.field.name" : "csrf",
