@@ -3,7 +3,7 @@ package log
 
 import (
 	"os"
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"yugo/config"
 	"strconv"
 	"time"
@@ -51,4 +51,6 @@ func init() {
 
 	// Only log the warning severity or above.
 	log.SetLevel(logLevel[level])
+	log.SetFormatter(&log.TextFormatter{ForceColors: true, FullTimestamp: true})
+	log.WithField("time", time.Now())
 }

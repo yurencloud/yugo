@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"yugo/config"
 	_ "yugo/log"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 
