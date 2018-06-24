@@ -4,11 +4,11 @@ package log
 import (
 	"os"
 	log "github.com/sirupsen/logrus"
-	"yugo/config"
 	"strconv"
 	"time"
 	"fmt"
 	"io"
+	"github.com/yurencloud/yugo/config"
 )
 
 func init() {

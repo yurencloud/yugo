@@ -4,9 +4,9 @@ import (
 	"github.com/CloudyKit/jet"
 	"bytes"
 	"net/http"
-	"yugo/config"
-	_ "yugo/log"
+	_ "github.com/yurencloud/yugo/log"
 	"github.com/sirupsen/logrus"
+	"github.com/yurencloud/yugo/config"
 )
 
 

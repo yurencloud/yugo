@@ -2,10 +2,10 @@ package session
 
 import (
 	"github.com/gorilla/sessions"
-	"yugo/config"
 	"net/http"
 	"github.com/satori/go.uuid"
 	"net/url"
+	"github.com/yurencloud/yugo/config"
 )
 
 func GetInstance(writer http.ResponseWriter, request *http.Request) *sessions.Session {
